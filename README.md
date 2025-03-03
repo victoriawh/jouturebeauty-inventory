@@ -4,6 +4,9 @@ This is the code for the Jouture Beauty Inventory Management System.
 
 The system contains: 
 -Login UI
+-Add Items UI
+-Dashboard UI
+
 
 Group Members:
 Jhanoi Samuels -- 620161507
