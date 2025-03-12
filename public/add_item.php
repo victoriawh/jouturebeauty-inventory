@@ -29,8 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-family: 'Playfair Display', serif;
             background-color: #2b1406;
             display: flex;
-            justify-content: center;
-            align-items: center;
             margin: 0;
             padding: 0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
