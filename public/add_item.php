@@ -2,6 +2,17 @@
 
 include 'db.php';
 
+$servername = "localhost"; // or your server name
+$dbname = "jouture_beauty"; // your database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $item_name = $_POST['item_name'];
     $category = $_POST['category'];
