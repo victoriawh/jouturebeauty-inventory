@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Add Item to Inventory</h2>
         <form method="POST">
             <input type="text" name="item_name" placeholder="Item Name" required>
-            <input name="Description" placeholder="Description" required>
+            <input type="text" name="Description" placeholder="Description" required>
             <input type="number" name="quantity" placeholder="Quantity" required>
             <input type="text" name="price" placeholder="Price" required>
             <button type="submit">Add Item</button>
