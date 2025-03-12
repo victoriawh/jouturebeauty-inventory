@@ -29,18 +29,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-family: 'Playfair Display', serif;
             background-color: #2b1406;
             display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensures full height centering */
             margin: 0;
             padding: 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             color: #4B2E1E;
-            position: relative; /* Add this line to position the logo */
+            position: relative;
+            text-align: center;
         }
-        form {
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: fit-content;
+            margin: auto;
             background-color: lightgoldenrodyellow;
             padding: 20px;
             border-radius: 10px;
-            width: 300px;
-            margin: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         input, select {
             width: 100%;
@@ -59,27 +66,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .success { color: green; }
         .error { color: red; }
+        
+        /* Logo styles */
         .logo {
             position: absolute;
             top: 10px;
-            right: 10px;
+            left: 10px;
             width: 100px; /* Adjust size as needed */
+        }
+        .logo-left {
+            left: 10px;
+        }
+        .logo-right {
+            right: 10px;
         }
     </style>
 </head>
 <body>
-    <img src="../assets/images/jblogo.jpg" alt="Jouture Logo" class="logo">
-    <h2>Add Item to Inventory</h2>
-    <form method="POST">
-        <input type="text" name="item_name" placeholder="Item Name" required>
-        <select name="category">
-            <option value="Clothing">Clothing</option>
-            <option value="Lip Products">Lip Products</option>
-            <option value="Makeup">Makeup</option>
-        </select>
-        <input type="number" name="quantity" placeholder="Quantity" required>
-        <input type="text" name="price" placeholder="Price" required>
-        <button type="submit">Add Item</button>
-    </form>
+    <!-- Logo on the top-left -->
+    <img src="../assets/images/jblogo.jpg" alt="Jouture Logo" class="logo logo-left">
+    
+    sets/images/jblogo.jpg" alt="Jouture Logo" class="logo logo-right">
+
+    <div class="container">
+        <h2>Add Item to Inventory</h2>
+        <form method="POST">
+            <input type="text" name="item_name" placeholder="Item Name" required>
+            <select name="category">
+                <option value="Clothing">Clothing</option>
+                <option value="Lip Products">Lip Products</option>
+                <option value="Makeup">Makeup</option>
+            </select>
+            <input type="number" name="quantity" placeholder="Quantity" required>
+            <input type="text" name="price" placeholder="Price" required>
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
 </body>
 </html>
