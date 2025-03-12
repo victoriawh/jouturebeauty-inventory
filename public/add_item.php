@@ -7,7 +7,7 @@ $password = ""; // your database password
 $dbname = "jouture_beauty"; // your database name
 
 // Create connection
-$conn = new mysqli($hostname, $username, $password, $dbname);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
