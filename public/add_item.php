@@ -1,21 +1,26 @@
 <?php
 
+include 'db.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $item_name = $_POST['item_name'];
     $category = $_POST['category'];
     $quantity = $_POST['quantity'];
     $price = $_POST['price'];
-    
+
+    // SQL query to insert data into inventory table
     $sql = "INSERT INTO inventory (item_name, category, quantity, price) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ssii", $item_name, $category, $quantity, $price);
-    
+
     if ($stmt->execute()) {
-        echo "<p class='success'>Item added successfully!</p>";
+        echo "<p class='success'>Item added successfully and updated in database!</p>";
     } else {
         echo "<p class='error'>Error: " . $stmt->error . "</p>";
     }
+    
     $stmt->close();
+    $conn->close();
 }
 ?>
 <!DOCTYPE html>
@@ -57,8 +62,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 5px;
         }
         button {
-            background-color: lightseagreen;
-            color: white;
+            background-color: #fff;
+            color: #D4AF37;
             padding: 10px;
             border: none;
             cursor: pointer;
@@ -86,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Logo on the top-left -->
     <img src="../assets/images/jblogo.jpg" alt="Jouture Logo" class="logo logo-left">
     
-    sets/images/jblogo.jpg" alt="Jouture Logo" class="logo logo-right">
+
 
     <div class="container">
         <h2>Add Item to Inventory</h2>
