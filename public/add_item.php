@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // SQL query to insert data into inventory table
     $sql = "INSERT INTO inventory (item_name, category, quantity, price) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssii", $item_name, $category, $quantity, $price);
+    $stmt->bind_param("ssii", $name, $description, $quantity, $price);
 
     if ($stmt->execute()) {
         echo "<p class='success'>Item added successfully and updated in database!</p>";
@@ -109,11 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Add Item to Inventory</h2>
         <form method="POST">
             <input type="text" name="item_name" placeholder="Item Name" required>
-            <select name="category">
-                <option value="Clothing">Clothing</option>
-                <option value="Lip Products">Lip Products</option>
-                <option value="Makeup">Makeup</option>
-            </select>
+            <input name="Description" placeholder="Description" required>
             <input type="number" name="quantity" placeholder="Quantity" required>
             <input type="text" name="price" placeholder="Price" required>
             <button type="submit">Add Item</button>
