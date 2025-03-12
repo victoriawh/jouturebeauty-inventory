@@ -1,8 +1,8 @@
 <?php
 
 
-$servername = "localhost"; // or your server name
-$username = ""; // your database username
+$host = "localhost"; // or your server name
+$username = "root"; // your database username
 $password = ""; // your database password
 $dbname = "jouture_beauty"; // your database name
 
