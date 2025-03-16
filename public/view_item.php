@@ -103,7 +103,7 @@ $result = $conn->query("SELECT * FROM inventory ORDER BY id DESC");
         </table>
 
         <!-- Back Button -->
-        <a href="add_inventory.php" class="back-button">Back to Add Item</a>
+        <a href="Dashboard.php" class="back-button">Back to Dashboard</a>
     </div>
 
 </body>
