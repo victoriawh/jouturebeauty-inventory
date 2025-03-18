@@ -64,10 +64,31 @@ if (!isLoggedIn()) {
         .btn:hover {
             background-color: #a87905;
         }
+	.logo{
+		width: 10%;
+                height: auto;
+                margin-right: 00PX;
+	}
+	.logout-btn {
+		padding: 10px 25px;
+            	border-radius: 7px;
+		font-size: 15px;
+    		background-color: #8B0000; /* Dark red */
+		margin-left: 700PX;
+	}
+
+	.logout-btn:hover {
+    		background-color: #a52a2a; /* Lighter red on hover */
+	}
     </style>
 </head>
 <body>
+    
     <div class="dashboard">
+	<!-- Jouture Logo -->
+    <img src="../assets/images/jblogo.jpg" alt="Jouture Logo" class="logo">
+	<a href="logout.php" class="btn logout-btn">Logout</a>
+
         <h1>Welcome to Jouture Beauty Inventory</h1>
         <p>Manage your jewelry collection with ease.</p>
         <div class="buttons">

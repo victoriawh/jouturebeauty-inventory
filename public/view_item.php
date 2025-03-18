@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch all inventory items
-$result = $conn->query("SELECT * FROM inventory ORDER BY id DESC");
+$result = $conn->query("SELECT * FROM inventory ORDER BY item_id DESC");
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +70,11 @@ $result = $conn->query("SELECT * FROM inventory ORDER BY id DESC");
             text-decoration: none;
             display: inline-block;
         }
+	.logo{
+		width: 7%;
+                height: auto;
+                margin-right: 1000PX;
+	}
     </style>
 </head>
 <body>
