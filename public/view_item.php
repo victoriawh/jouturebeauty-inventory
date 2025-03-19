@@ -13,7 +13,13 @@ if ($conn->connect_error) {
 }
 
 // Fetch all inventory items
-$result = $conn->query("SELECT * FROM inventory ORDER BY id DESC");
+$sql = "SELECT * FROM inventory ORDER BY id DESC";
+$result = $conn->query($sql);
+
+// Check if the query executed successfully
+if ($result === false) {
+    die("Query failed: " . $conn->error);
+}
 ?>
 
 <!DOCTYPE html>
