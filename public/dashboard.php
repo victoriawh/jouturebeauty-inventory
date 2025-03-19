@@ -7,6 +7,11 @@ if (!isLoggedIn()) {
     header("Location: login.php");
     exit();
 }
+if (isset($_GET['logout'])) {
+    logout();
+    header("Location: login.php");
+    exit();
+}
 
 ?>
 <!DOCTYPE html>
@@ -87,7 +92,7 @@ if (!isLoggedIn()) {
     <div class="dashboard">
 	<!-- Jouture Logo -->
     <img src="../assets/images/jblogo.jpg" alt="Jouture Logo" class="logo">
-	<a href="logout.php" class="btn logout-btn">Logout</a>
+	<a href="?logout=true" class="btn logout-btn">Logout</a>
 
         <h1>Welcome to Jouture Beauty Inventory</h1>
         <p>Manage your jewelry collection with ease.</p>
