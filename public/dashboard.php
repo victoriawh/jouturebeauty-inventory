@@ -22,7 +22,7 @@ if (isset($_GET['logout'])) {
     <title>Jouture Beauty Dashboard</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
-        body {
+         body {
             font-family: 'Poppins', sans-serif;
             background-color: #2b1406;
             color:rgb(95, 70, 46);
@@ -88,8 +88,8 @@ if (isset($_GET['logout'])) {
     </style>
 </head>
 <body>
-    
     <div class="dashboard">
+
 	<!-- Jouture Logo -->
     <img src="../assets/images/jblogo.jpg" alt="Jouture Logo" class="logo">
 	<a href="?logout=true" class="btn logout-btn">Logout</a>
