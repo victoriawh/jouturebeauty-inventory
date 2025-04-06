@@ -37,6 +37,7 @@ class InventoryManager {
 
 
         case 'search':
+            return $this->searchItem();
 
 
         case 'update':
@@ -289,7 +290,134 @@ HTML;
     return $output;
 }
 
+private function searchItem(){
+    $output = "";
 
+    // Get values from POST
+    $item_id = $_POST['item_id'] ?? null;
+    $searchAgain = isset($_POST['search_again']);
+
+    // If form was submitted to search for item
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $item_id && !$searchAgain) {
+        $stmt = $this->conn->prepare("SELECT * FROM inventory WHERE item_id = ?");
+        if (!$stmt) {
+            die("Prepare failed: " . $this->conn->error);
+        }
+
+        $stmt->bind_param("i", $item_id);
+        $success = $stmt->execute();
+
+        if (!$success) {
+            die("Execute failed: " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $item = $result->fetch_assoc();
+
+            // Format the item information for display
+            $output .= "<div class='item-details' style='margin-top: 50px;'>";
+            $output .= "<h3>Item Information</h3>";
+            $output .= "<p><strong>ID:</strong> " . htmlspecialchars($item['item_id']) . "</p>";
+            $output .= "<p><strong>Name:</strong> " . htmlspecialchars($item['name'] ?? 'N/A') . "</p>";
+            $output .= "<p><strong>Description:</strong> " . htmlspecialchars($item['description'] ?? 'N/A') . "</p>";
+            $output .= "<p><strong>Quantity:</strong> " . htmlspecialchars($item['quantity'] ?? 'N/A') . "</p>";
+            $output .= "<p><strong>Price:</strong> " . htmlspecialchars($item['price'] ?? 'N/A') . "</p>";
+            $output .= "</div>";
+        } else {
+            $output .= "<p class='error' style='margin-top: 50px;'><strong>No item found with ID: " . htmlspecialchars($item_id) . "</strong></p>";
+        }
+
+        $stmt->close();
+
+        // Show "Search Another Item" button
+        $output .= <<<HTML
+<style>
+    .search-again-btn {
+        background-color: #a87905;
+        color: white;
+        padding: 12px 24px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    .search-again-btn:hover {
+        background-color: #946705;
+    }
+</style>
+
+<form method="POST">
+    <input type="hidden" name="search_again" value="1" />
+    <button type="submit" class="search-again-btn">Search Another Item</button>
+</form>
+HTML;
+
+    } else {
+        // Show search form
+        $output .= <<<HTML
+        <style>
+            .form-container {
+                margin-top: 40px;
+                text-align: left;
+            }
+            .form-container form {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .form-container label {
+                font-weight: bold;
+            }
+            .form-container input {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+            h2 {
+                text-align: center;
+            }
+            .back-btn {
+                padding: 10px 25px;
+                border-radius: 7px;
+                font-size: 15px;
+                background-color: #b8860b;
+                color: white;
+                text-decoration: none;
+                margin-left: 600px;
+            }
+            .back-btn:hover {
+                background-color: #a87905;
+            }
+            .form-container button {
+                background-color: #b8860b;
+                color: white;
+                padding: 10px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+            }
+            .form-container button:hover {
+                background-color: #a87905;
+            }
+        </style>
+
+        <div class="form-container">
+            <h2>Search Inventory Item</h2>
+            <form method="POST">
+                <input type="hidden" name="action" value="search" />
+                <label>Enter Item ID for the item needed.</label>
+                <input type="number" name="item_id" required />
+                <button type="submit">Search Item</button>
+            </form>
+        </div>
+HTML;
+    }
+
+    return $output;
+}
 
 
 
