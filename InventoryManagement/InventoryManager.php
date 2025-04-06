@@ -29,7 +29,14 @@ class InventoryManager {
             }
 
         case 'delete':
-        
+            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($postData["item_id"])) {
+                $item_id = intval($postData["item_id"]);
+                $result = $this->deleteItem($item_id);
+                return $result ? "<p class='success'>Item deleted successfully!</p>" : "<p class='error'>Failed to delete item.</p>";
+            } else {
+                return $this->delete_item_form();
+            }
+
         case 'search':
 
         case 'update':
@@ -148,6 +155,80 @@ private function addItem($name, $description, $quantity, $price) {
     $stmt->close();
     return $success;
 }
+
+//Delete Item function for deleting item from inventory
+
+private function delete_item_form() {
+    return <<<HTML
+    <style>
+        .form-container {
+            margin-top: 40px;
+            text-align: left;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .form-container label {
+            font-weight: bold;
+        }
+        .form-container input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-container button {
+            background-color: #b8860b;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #a87905;
+        }
+    </style>
+
+    <div class="form-container">
+        <h2>Delete Inventory Item</h2>
+        <form method="POST">
+            <input type="hidden" name="action" value="delete" />
+            <label>Enter Item ID to Delete</label>
+            <input type="number" name="item_id" required />
+            <button type="submit">Delete Item</button>
+        </form>
+    </div>
+HTML;
+}
+
+private function deleteItem($item_id) {
+    $created_by = $_SESSION['user_id'] ?? null;
+
+    if (!$created_by) {
+        return false;
+    }
+
+    $stmt = $this->conn->prepare("DELETE FROM inventory WHERE item_id = ? AND created_by = ?");
+    if (!$stmt) {
+        die("Prepare failed: " . $this->conn->error);
+    }
+
+    $stmt->bind_param("ii", $item_id, $created_by);
+
+    $success = $stmt->execute();
+    if (!$success) {
+        die("Execute failed: " . $stmt->error);
+    }
+
+    $stmt->close();
+    return $success;
+}
+
 
 //View Item function for rendering the content
 private function viewItems() {
