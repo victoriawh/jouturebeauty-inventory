@@ -29,13 +29,7 @@ class InventoryManager {
             }
 
         case 'delete':
-            if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($postData["item_id"])) {
-                $item_id = intval($postData["item_id"]);
-                $result = $this->deleteItem($item_id);
-                return $result ? "<p class='success'>Item deleted successfully!</p>" : "<p class='error'>Failed to delete item.</p>";
-            } else {
-                return $this->delete_item_form();
-            }
+            return $this->deleteItem();
 
         case 'search':
 
@@ -158,8 +152,38 @@ private function addItem($name, $description, $quantity, $price) {
 
 //Delete Item function for deleting item from inventory
 
-private function delete_item_form() {
-    return <<<HTML
+private function deleteItem() {
+    $output = "";
+
+    // Get values from POST and SESSION
+    $item_id = $_POST['item_id'] ?? null;
+    $created_by = $_SESSION['user_id'] ?? null;
+
+    // If the form was submitted
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $item_id && $created_by) {
+        $stmt = $this->conn->prepare("DELETE FROM inventory WHERE item_id = ? AND created_by = ?");
+        if (!$stmt) {
+            die("Prepare failed: " . $this->conn->error);
+        }
+
+        $stmt->bind_param("ii", $item_id, $created_by);
+        $success = $stmt->execute();
+
+        if (!$success) {
+            die("Execute failed: " . $stmt->error);
+        }
+
+        if ($stmt->affected_rows > 0) {
+            $output .= "<p class='success'>Item deleted successfully!</p>";
+        } else {
+            $output .= "<p class='error'>No item found with that ID.</p>";
+        }
+
+        $stmt->close();
+    }
+
+    // Always show the form
+    $output .= <<<HTML
     <style>
         .form-container {
             margin-top: 40px;
@@ -204,30 +228,10 @@ private function delete_item_form() {
         </form>
     </div>
 HTML;
+
+    return $output;
 }
 
-private function deleteItem($item_id) {
-    $created_by = $_SESSION['user_id'] ?? null;
-
-    if (!$created_by) {
-        return false;
-    }
-
-    $stmt = $this->conn->prepare("DELETE FROM inventory WHERE item_id = ? AND created_by = ?");
-    if (!$stmt) {
-        die("Prepare failed: " . $this->conn->error);
-    }
-
-    $stmt->bind_param("ii", $item_id, $created_by);
-
-    $success = $stmt->execute();
-    if (!$success) {
-        die("Execute failed: " . $stmt->error);
-    }
-
-    $stmt->close();
-    return $success;
-}
 
 
 //View Item function for rendering the content
