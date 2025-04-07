@@ -41,7 +41,7 @@ class InventoryManager {
 
 
         case 'update':
-
+            return $this->updateItem();
 
         case 'view':
             return $this->viewItems();
@@ -539,10 +539,116 @@ HTML;
     return $html;
 }
 
+// Update Item function for updating an existing inventory item
+private function updateItem() {
+    $output = "";
+    $created_by = $_SESSION['user_id'] ?? null;
 
+    if (!$created_by) {
+        return "<p class='error'>User not authenticated.</p>";
+    }
 
+    $item_id = $_POST['item_id'] ?? null;
+    $name = $_POST['name'] ?? null;
+    $description = $_POST['description'] ?? null;
+    $quantity = $_POST['quantity'] ?? null;
+    $price = $_POST['price'] ?? null;
 
+    // Check if form is submitted and fields are filled
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $item_id && $name && $description && $quantity && $price) {
+        $stmt = $this->conn->prepare(
+            "UPDATE inventory SET name = ?, description = ?, quantity = ?, price = ? 
+             WHERE item_id = ? AND created_by = ?"
+        );
+
+        if (!$stmt) {
+            $output .= "<p class='error'>Prepare failed: " . $this->conn->error . "</p>";
+        } else {
+            $stmt->bind_param("ssiiii", $name, $description, $quantity, $price, $item_id, $created_by);
+            $success = $stmt->execute();
+
+            if ($success && $stmt->affected_rows > 0) {
+                $output .= "<p class='success'>Item updated successfully!</p>";
+            } else {
+                $output .= "<p class='error'>No item found or nothing changed.</p>";
+            }
+
+            $stmt->close();
+        }
+    }
+
+    // Always show the form
+    $output .= <<<HTML
+    <style>
+        .form-container {
+            margin-top: 40px;
+            text-align: left;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .form-container label {
+            font-weight: bold;
+        }
+        .form-container input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-container button {
+            background-color: #b8860b;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #a87905;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+
+    <div class="form-container">
+        <h2>Update Inventory Item</h2>
+        <form method="POST">
+            <input type="hidden" name="action" value="update" />
+
+            <label>Item ID</label>
+            <input type="number" name="item_id" required />
+
+            <label>New Name</label>
+            <input type="text" name="name" required />
+
+            <label>New Description</label>
+            <input type="text" name="description" required />
+
+            <label>New Quantity</label>
+            <input type="number" name="quantity" required />
+
+            <label>New Price</label>
+            <input type="number" step="0.01" name="price" required />
+
+            <button type="submit">Update Item</button>
+        </form>
+    </div>
+HTML;
+
+    return $output;
 }
 
+}
 
 ?>
